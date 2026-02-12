@@ -1,4 +1,4 @@
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext } from "@hello-pangea/dnd";
 import TaskColumn from './TaskColumn';
 import { useSpec } from '../context/SpecContext';
 
