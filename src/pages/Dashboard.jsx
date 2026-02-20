@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import FeatureForm from '../components/FeatureForm';
 import TaskBoard from '../components/TaskBoard';
 import Sidebar from '../components/Sidebar';
@@ -34,7 +35,7 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen dashboard-gradient dashboard-pattern overflow-x-hidden">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onNavigate={() => setSidebarOpen(false)} />
-      <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 min-w-0">
+      <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 min-w-0" role="main" aria-label="Spec generator dashboard">
         <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
           {/* Header */}
           <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 animate-card-enter">
@@ -56,9 +57,9 @@ export default function Dashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                  <Link to="/" className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight hover:opacity-80 transition-opacity">
                     SpecForge
-                  </h1>
+                  </Link>
                   <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 mt-0.5">
                     {currentSpec ? currentSpec.title || 'Product Spec' : 'Generate and manage product specs'}
                   </p>

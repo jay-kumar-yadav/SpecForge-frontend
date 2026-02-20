@@ -6,6 +6,23 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('specforge_token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem('specforge_token');
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+    }
+    return Promise.reject(err);
+  }
+);
+
 /** Map frontend form fields to backend API shape */
 const toApiInput = (form) => ({
   title: form.title,
@@ -54,6 +71,16 @@ export const getSpecs = async () => {
 export const getSpecById = async (id) => {
   const { data } = await api.get(`/spec/${id}`);
   return data?.data ?? data;
+};
+
+export const getHealth = async () => {
+  try {
+    const { data } = await api.get('/health');
+    return data?.data ?? data;
+  } catch (err) {
+    if (err.response?.data?.data) return err.response.data.data;
+    throw err;
+  }
 };
 
 export default api;

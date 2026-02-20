@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSpec } from '../context/SpecContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Sidebar({ isOpen = false, onClose, onNavigate }) {
+  const { user, logout } = useAuth();
   const { recentSpecs, loadRecentSpecs, loadSpec, currentSpec, clearSpec, loading } = useSpec();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadRecentSpecs();
@@ -24,7 +28,7 @@ export default function Sidebar({ isOpen = false, onClose, onNavigate }) {
   };
 
   const asideClasses = [
-    'w-64 shrink-0 border-r border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4',
+    'w-64 shrink-0 border-r border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 p-4 flex flex-col min-h-0 h-full',
     'fixed inset-y-0 left-0 z-40 md:static transform transition-transform duration-200 ease-out',
     isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
   ].join(' ');
@@ -87,6 +91,25 @@ export default function Sidebar({ isOpen = false, onClose, onNavigate }) {
           </li>
         ))}
       </ul>
+
+      {user && (
+        <div className="mt-auto pt-4 border-t border-zinc-200 dark:border-zinc-700">
+          <p className="px-3 py-1 text-xs text-zinc-500 dark:text-zinc-400 truncate" title={user.email}>
+            {user.name}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              logout();
+              onNavigate?.();
+              navigate('/login', { replace: true });
+            }}
+            className="w-full mt-2 text-left px-3 py-2 rounded-lg text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+          >
+            Sign out
+          </button>
+        </div>
+      )}
     </aside>
     </>
   );
